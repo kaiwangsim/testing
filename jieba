@@ -26,9 +26,6 @@ print("----------------")
 lista = sorted(lista, key=lambda a:a[1], reverse=True)
 print(lista)
 
-for i in range(22):
-    a, b = lista[i]
-    print("{0:<10}{1:>5}".format(a, b))
 
 
 top30 = []
