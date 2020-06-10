@@ -8,7 +8,7 @@ pat=re.compile(r'[\u4e00-\u9fa5]+')  #去掉非中文
 result=pat.findall(txt)  #去掉非中文
 txt = re.sub(r'[^\w\s]','',txt)  #去掉标点符号
 print(txt)
-
+this is different.
 
 words = jieba.lcut(txt)
 content = {}
