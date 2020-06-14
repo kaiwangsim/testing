@@ -90,7 +90,7 @@ while t:
             continue
         
 df = pd.DataFrame(list2, columns=['ai','创建时间','转发数','评论数','点赞数','原文链接','内容'])
-df.to_csv(r'C:\Users\Wang Kai\Desktop\my.csv', encoding='utf-8-sig')
+df.to_csv(r'd:\pachong\my.csv', encoding='utf-8-sig')
 
 
 
