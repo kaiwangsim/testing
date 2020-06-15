@@ -1,14 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  1 16:09:35 2020
-搜索的东西
 
-@author: Wang Kai
-"""
 import requests
 import pandas as pd
-import re
-
 
 url = r'https://m.weibo.cn/api/container/getIndex?uid=2803301701&t=0&luicode=10000011&lfid=100103type%3D1%26q%3D%E4%BA%BA%E6%B0%91%E6%97%A5%E6%8A%A5&type=uid&value=2803301701&containerid=1076032803301701'
 
@@ -42,13 +34,8 @@ for i in range(1, len(cards)):  #遍历一个URL（下滚动作）里面的所�
     list1.append(str(c.get('comments_count')))
     list1.append(str(c.get('attitudes_count')))
     list1.append('https://m.weibo.cn/detail/' + str(c.get('id')))
-    txt = c.get('text')
-    for i in "\n\u3000":   #指定符号替换为  ，
-        txt = txt.replace(i, "，")
-    pat=re.compile(r'[\u4e00-\u9fa5]+')  #去掉非中文
-    result=pat.findall(txt)  #去掉非中文
-    txt = re.sub(r'[^\w\s0-9a-zA-Z_ ]','',txt)  #去掉标点符号    
-    list1.append(result)
+    txt = c.get('text') 
+    list1.append(txt)
     list2.append(list1)
     list1=[]
     
@@ -72,13 +59,8 @@ while t:
             list1.append(str(c.get('comments_count')))
             list1.append(str(c.get('attitudes_count')))
             list1.append('https://m.weibo.cn/detail/' + str(c.get('id')))
-            txt = c.get('text')
-            for i in "\n\u3000":   #指定符号替换为  ，
-                txt = txt.replace(i, "，")
-                pat=re.compile(r'[\u4e00-\u9fa5]+')  #去掉非中文
-                result=pat.findall(txt)  #去掉非中文
-                txt = re.sub(r'[^\w\s0-9a-zA-Z_ ]','',txt)  #去掉标点符号    
-            list1.append(result)
+            txt = c.get('text') 
+            list1.append(txt)
             list2.append(list1)
             list1=[]
         
@@ -88,6 +70,10 @@ while t:
 df = pd.DataFrame(list2, columns=['ai','创建时间','转发数','评论数','点赞数','原文链接','内容'])
 df.to_csv(r'd:\pachong\my.csv', encoding='utf-8-sig')
 
+
+
+#for list2, need to write into database
+#write from here:
 
 
 

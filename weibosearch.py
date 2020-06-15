@@ -7,7 +7,7 @@ Created on Sun Mar  1 16:09:35 2020
 """
 import requests
 import pandas as pd
-import jieba
+
 import re
 
 
