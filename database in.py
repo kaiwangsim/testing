@@ -1,6 +1,8 @@
 
 import requests
 import pandas as pd
+from sqlalchemy import create_engine
+
 
 url = r'https://m.weibo.cn/api/container/getIndex?uid=2803301701&t=0&luicode=10000011&lfid=100103type%3D1%26q%3D%E4%BA%BA%E6%B0%91%E6%97%A5%E6%8A%A5&type=uid&value=2803301701&containerid=1076032803301701'
 
@@ -42,7 +44,7 @@ for i in range(1, len(cards)):  #遍历一个URL（下滚动作）里面的所�
 print(x)
     
 
-t = 10
+t = 50
 x = 2
 while t:
 
@@ -66,7 +68,9 @@ while t:
         
         except:
             continue
-        
+    print('finished page ' + str(x))
+    
+      
 df = pd.DataFrame(list2, columns=['ai','创建时间','转发数','评论数','点赞数','原文链接','内容'])
 df.to_csv(r'd:\pachong\my.csv', encoding='utf-8-sig')
 
@@ -75,10 +79,16 @@ df.to_csv(r'd:\pachong\my.csv', encoding='utf-8-sig')
 #for list2, need to write into database
 #write from here:
 
+'''
+
+engine = create_engine("mysql+pymysql://wangkai:JIAyou@777@8.210.61.73:3306/mydb01")
 
 
+sql_query = 'select * from table001'
+# 使用pandas的read_sql_query函数执行SQL语句，并存入DataFrame
+df_read = pd.read_sql_query(sql_query, engine)
+print(df_read)
 
 
-
-
-
+df.to_sql('table001', engine, if_exists='append')
+'''
