@@ -32,3 +32,10 @@ for i in xx:
     jj = jj + i
 
 print(jj)
+
+
+
+b = 'Legend: \n        * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC\n        age - seconds since last seen,+ - primary entry using vPC Peer-Link\n   VLAN     MAC Address      Type      age     Secure NTFY   Ports/SWID.SSID.LID\n---------+-----------------+--------+---------+------+----+------------------\n* 300      2c54.2dc9.7841    dynamic   10         F    F  Po46\n'
+
+
+c=re.compile(r'\n.+').findall(b)
