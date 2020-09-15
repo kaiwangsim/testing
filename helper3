@@ -1,0 +1,52 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep  8 10:56:13 2020
+
+@author: kwang6
+
+created for the sites columns
+
+"""
+
+from netmiko.ssh_autodetect import SSHDetect
+from netmiko import NetMikoTimeoutException, NetmikoAuthenticationException, ConnectHandler
+import pandas as pd
+from pandas import DataFrame
+import re
+
+
+data = pd.read_excel(r'C:\Users\kwang6\Desktop\dhcp2.xlsx')
+
+
+list1 = []
+list2 = []
+
+
+
+
+for i in range(0,948):
+    list1.append(data.loc[i]['Site'])
+    list1.append(data.loc[i]['IPHelper1'])
+    list1.append(data.loc[i]['IPHelper2'])
+    list2.append(list1)
+    list1=[]
+    
+df=pd.DataFrame(list2, columns = ['site', 'helper1', 'helper2'])
+
+
+df.to_csv(r'C:\Users\kwang6\Desktop\wangkai\hahaha.csv', encoding='utf-8-sig')
+
+
+df1=df.drop_duplicates()
+df1.loc[:,'site']=df1['site'].str.upper()
+
+
+
+mask = df1['site'].duplicated(keep=False)
+
+print(df1[mask])
+
+
+print(df1[~mask])
+
+
