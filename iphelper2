@@ -1,0 +1,148 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep  8 10:56:13 2020
+
+@author: kwang6
+
+ready to run, create u3 for verify function
+
+"""
+
+from netmiko.ssh_autodetect import SSHDetect
+from netmiko import NetMikoTimeoutException, NetmikoAuthenticationException, ConnectHandler
+import pandas as pd
+from pandas import DataFrame
+import re
+
+
+data = pd.read_excel(r'C:\Users\kwang6\Desktop\dhcp1.xlsx')
+
+list0 = data['ScopeID']
+list1 = data['ActiveNode']
+list2 = data['IPHelper1']
+list3 = data['IPHelper2']
+data['coresw'] = None
+data['sites'] = None
+
+#make vlan ip
+for i in range (0, len(data)):
+    aaa = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.').findall(list0[i])[0]  + '1'
+    data['coresw'][i] = aaa
+
+for i in range (0, len(data)):
+    a = re.compile(r'\d{1,3}\.\d{1,3}\.').findall(list0[i])[0]  + '0.0/16'
+    data['sites'][i] = a
+
+
+#data.to_csv(r'C:\Users\kwang6\Desktop\wangkai\111.csv', encoding='utf-8-sig')
+
+
+site = None
+for i in range (300, 350):
+    x123 = data['sites'][i]
+    print(f'processing line {i}')
+
+    if site != x123:   
+        print('------------------------------------------')
+        print(f'changing site from {site} to {x123}')
+        host = data['coresw'][i]
+        remote_device = {
+            'device_type': 'autodetect',
+            'host': host,
+            'username': 'kwang6',
+            'password': 'pp@',
+            }
+        
+        try:
+            guesser = SSHDetect(**remote_device)
+            best_match = guesser.autodetect()
+            print('Firmware Type:', best_match)
+            print('\n')
+            remote_device['device_type'] = best_match
+            connection = ConnectHandler(**remote_device)    
+            all_vlan = connection.send_command('show ip interface brief', use_textfsm=True)
+    
+    #create ip - vlan dict
+            site = x123
+            a = {}
+            for vlanx in all_vlan:
+                if "Vlan" in vlanx['intf'] and vlanx['ipaddr'] != 'unassigned':
+                    a[re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.').findall(vlanx['ipaddr'])[0] + '0'] = vlanx['intf']
+            
+            if remote_device['device_type'] == 'cisco_nxos':
+                x = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.').findall(data['coresw'][i])[0] + '0'
+                try:
+                    svi = a[x]
+                    interface_config = f"show run interface {svi}"
+                    output = connection.send_command(interface_config)
+                    print(output)
+                
+                except KeyError as e:
+                    print(f'KeyError: {e}')
+                    with open(r'C:\Users\kwang6\Desktop\wangkai\log.txt', 'a',) as f:
+                        f.write(f'KeyError: {e}')
+                        f.write(f'happened in line {i}\n')
+
+            if remote_device['device_type'] == 'cisco_ios':
+                x = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.').findall(data['coresw'][i])[0] + '0'
+                try:
+                    svi = a[x] 
+                    interface_config = f"show run interface {svi}"
+                    output = connection.send_command(interface_config)
+                    print(output)
+                
+                except KeyError as e:
+                    print(f'KeyError: {e}')
+                    with open(r'C:\Users\kwang6\Desktop\wangkai\log.txt', 'a',) as f:
+                        f.write(f'KeyError: {e}')
+                        f.write(f'happened in line {i}\n')       
+        except (NetMikoTimeoutException, NetmikoAuthenticationException) as e:
+            with open(r'C:\Users\kwang6\Desktop\wangkai\log.txt', 'a',) as f:
+                print(f'!!!error: {e}')
+                f.write(f'{e}')
+                f.write(f'happened in line {i}\n')
+
+                
+    if site == x123:
+        print(f'site = {site}')
+        if remote_device['device_type'] == 'cisco_nxos':
+            x = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.').findall(data['coresw'][i])[0] + '0'
+            try:
+                svi = a[x]
+                interface_config = f"show run interface {svi}"
+                output = connection.send_command(interface_config)
+                print(output)
+            
+            except KeyError as e:
+                print(f'KeyError: {e}')
+                with open(r'C:\Users\kwang6\Desktop\wangkai\log.txt', 'a',) as f:
+                    f.write(f'KeyError: {e}')
+                    f.write(f'happened in line {i}\n')
+        if remote_device['device_type'] == 'cisco_ios':
+            x = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.').findall(data['coresw'][i])[0] + '0'
+            try:
+                svi = a[x] 
+                interface_config = f"show run interface {svi}"
+                output = connection.send_command(interface_config)
+                print(output)
+            except KeyError as e:
+                print(f'KeyError: {e}')
+                with open(r'C:\Users\kwang6\Desktop\wangkai\log.txt', 'a',) as f:
+                    f.write(f'KeyError: {e}')
+                    f.write(f'happened in line {i}\n')
+                    
+                    
+    print(f'line {i} is done, current site is {site}')
+    print('\n')
+    print('\n')
+
+
+
+'''
+            interface_config = [
+                    f"show run interface {svi}",
+                    f"show run | in {data['IPHelper1'][i]}",
+                    f"show run | in {data['IPHelper2'][i]}"
+                ]
+'''
+            
