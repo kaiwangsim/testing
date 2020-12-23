@@ -1,0 +1,32 @@
+import re
+import pandas as pd
+
+data = pd.read_excel(r'C:\Users\ka20174014\Desktop\Copy of 30PO information.xls')
+data1 = pd.read_excel(r'C:\Users\ka20174014\Desktop\China Sites.xlsx', engine='openpyxl')
+
+
+data['wipro site ID']
+data1['Wipro Site ID']
+
+
+x = len(data['wipro site ID'])
+
+
+
+while x > 0:
+    x-=1
+    for i in range(0, len(data1['Wipro Site ID'])):
+        if data['wipro site ID'][x] == data1['Wipro Site ID'][i]:
+            data1['delivery'][i] = 'yes'
+            data1['3.1 Estimate ID'][i] = data['3.1 Estimate ID'][x]
+            data1['3.2 Vendor Quotation'][i] = data['3.2 Vendor Quotation'][x]
+            data1['3.6 Wipro PO number'][i] = data['3.6 Wipro PO number'][x]
+            break
+        else:
+            continue
+
+
+
+data1.to_csv(r'C:\Users\ka20174014\Desktop\111.csv', encoding='utf-8-sig')
+
+
