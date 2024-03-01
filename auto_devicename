@@ -1,0 +1,81 @@
+import pandas as pd
+data1 = pd.read_excel(r'C:\Users\Admin\Desktop\device_information.xlsx').fillna(0)
+data2 = pd.read_excel(r'C:\Users\Admin\Desktop\device_information.xlsx', "Sheet2")
+
+site_code = data1['site_code'][0]
+
+a = 0
+
+
+dlist=[]
+for i in range(len(data1['floor_count'])):
+    floor_count = data1['floor_count'][i]
+    hostname = site_code + f"-{floor_count}-" + 'C9200-I-ASW01'
+    dlist.append(hostname)
+    hostname = site_code + f"-{floor_count}-" + 'C9200-I-AVSW01'
+    dlist.append(hostname)
+    hostname = site_code + f"-{floor_count}-" + 'C9300-I-ASWW01'
+    dlist.append(hostname)
+    hostname = site_code + f"-{floor_count}-" + 'C9200-I-ASSW01'
+    dlist.append(hostname)
+
+mdf = data1['mdf'][0]
+
+def mdf_check(a, dlist):
+    for i in range(0, len(dlist)):
+        if a in dlist[i]:
+            dlist[i] = dlist[i].replace('-I-', '-M-')
+    return dlist
+
+mdf_check(mdf, dlist)
+
+data2['hostnames'] = dlist
+
+dlist2 = []
+
+hostname = site_code + f"-{mdf}-" + 'C9500-M-CSW01'
+dlist2.append(hostname)
+hostname = site_code + f"-{mdf}-" + 'C9500-M-CSW02'
+dlist2.append(hostname)
+hostname = site_code + f"-{mdf}-" + 'v3400-M-VCE01'
+dlist2.append(hostname)
+hostname = site_code + f"-{mdf}-" + 'v3400-M-VCE02'
+dlist2.append(hostname)
+
+dlist3=[]
+
+
+
+def work_device(a):
+    for i in range(len(a)):
+        for s in range(1, int((a[i]))+1):
+            if a.name == 'access':
+                hostname = site_code + f"-{data1['floor_count'][i]}-" + f'C9200-I-ASW0{s}'
+                dlist3.append(hostname)
+            elif a.name == "av":
+                hostname = site_code + f"-{data1['floor_count'][i]}-" + f'C9200-I-AVSW0{s}'
+                dlist3.append(hostname)
+            elif a.name == "wireless":
+                hostname = site_code + f"-{data1['floor_count'][i]}-" + f'C9300-I-ASWW0{s}'
+                dlist3.append(hostname)
+            elif a.name == "security":
+                hostname = site_code + f"-{data1['floor_count'][i]}-" + f'C9200-I-ASSW0{s}'
+                dlist3.append(hostname)
+            elif a.name == "core":
+                hostname = site_code + f"-{data1['floor_count'][i]}-" + f'C9500-I-CSW0{s}'
+                dlist3.append(hostname)
+    return dlist3
+work_device(data1['access'])
+work_device(data1['av'])
+work_device(data1['wireless'])
+work_device(data1['security'])
+work_device(data1['core'])
+
+with pd.ExcelWriter(
+    r'C:\Users\Admin\Desktop\device_information - Copy.xlsx',
+    mode="a",
+    engine="openpyxl",
+    if_sheet_exists="replace",
+) as writer:
+    data2.to_excel(writer, index=False, sheet_name="Sheet2")  
+
