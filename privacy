@@ -1,0 +1,64 @@
+# Happy Online 隐私政策 / Privacy Policy
+
+*生效日期 / Effective date: 2026-07-__（上架日）*
+*适用于 iOS 应用 "Happy Online"（uk.bridgenet.HappyOnline）*
+
+## 一句话版本
+
+我们不设账号、不收集姓名/邮箱/电话等任何个人身份信息、不记录也无法查看你的
+浏览内容；我们仅处理提供 VPN 服务在技术上必需的最小匿名数据，且**绝不向任何
+第三方出售或披露任何数据**。
+
+## The short version (English)
+
+No accounts. We never collect your name, email, phone number, or any other
+personally identifying information. We do not log or inspect your browsing.
+We process only the minimal anonymous data technically required to run the
+VPN, and **we never sell or disclose any data to third parties**.
+
+---
+
+## 我们处理的数据（全部匿名）
+
+| 数据 | 来源与用途 | 保存位置 |
+|---|---|---|
+| 匿名订阅标识（Apple `originalTransactionId`） | Apple 签发；用于识别订阅有效性与设备配额（每订阅 3 台） | 我们的服务器 |
+| 设备随机标识（UUID） | 应用首次启动时在你的设备上随机生成；用于区分同一订阅下的多台设备 | 你的设备 + 我们的服务器 |
+| WireGuard 公钥与隧道内网 IP | 公钥在你的设备上生成（**私钥永不离开你的设备**）；用于建立加密隧道 | 我们的服务器 |
+| 订阅状态与到期时间 | 来自 Apple（购买凭证/服务器通知）；用于开通与停止服务 | 我们的服务器 |
+| DeviceCheck 试用标记（两比特） | 由 Apple 存储在其服务器上；用于"每台设备一次免费试用"，我们只能读写这两比特，无法借此识别你 | Apple |
+
+## 我们不收集的数据
+
+- 姓名、邮箱、电话、地址等任何个人身份信息（本应用没有注册/登录功能）
+- 浏览历史、访问的网站、DNS 查询内容、任何流量内容——**我们不做任何
+  用户级流量日志**
+- 支付信息——付款完全由 Apple 处理，我们无法接触你的任何支付资料
+- 广告标识符；本应用不含任何第三方分析或广告 SDK
+
+## 流量如何处理
+
+到中国大陆站点的流量经 WireGuard 加密后经由我们的服务器中转；其余流量
+直接从你的设备本地网络发出，**不经过我们的服务器**。服务器仅做实时转发，
+不存储流量内容。
+
+## 数据保留与删除
+
+- 隧道配置（公钥/隧道 IP/设备标识）在订阅或试用有效期内保留，到期后不再
+  用于提供服务；
+- 卸载应用即销毁设备上的密钥；你也可以在应用内断开并停用本设备（对应
+  服务器记录随之失效）；
+- 隧道 IP 释放后经短暂冷却期即可复用，不与任何身份关联。
+
+## 开源与可审计
+
+本应用客户端以 GPL-3.0-or-later 开源，任何人可审计其行为：
+https://github.com/kaiwangsim/happy-online-ios
+
+## 联系方式
+
+隐私问题请联系：privacy@bridgenet.uk
+
+## 变更
+
+政策如有实质变更，将在本页面更新并注明生效日期。
